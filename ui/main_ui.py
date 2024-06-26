@@ -12,6 +12,7 @@ class MainWindow:
     width = 300
     height = 150
     b_width = width * 0.525
+    b3_width = width * 0.37
     b4_width = width * 0.27
     size = (width, height)
     layout_bgc = (0.2,0.2,0.2)
@@ -97,9 +98,9 @@ class MainWindow:
         cmds.text(label = self.sep_str, parent = self.curve_layout)
         # Controls
         cmds.text(label = 'Controls', align = 'left', font = 'boldLabelFont', parent = self.curve_layout)
-        cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.curve_layout)
-        cmds.button(label = 'Create control', width = self.b_width, bgc=self.blue, command = self.create_control)
-        self.optionmenu_control = cmds.optionMenu(width = self.b_width)
+        cmds.rowColumnLayout (numberOfColumns = 3, parent = self.curve_layout)
+        cmds.button(label = 'Create control', bgc=self.blue, w=self.b3_width, command = self.create_control)
+        self.optionmenu_control = cmds.optionMenu(w=self.b3_width)
         cmds.menuItem('Chest')
         cmds.menuItem('Plus')
         cmds.menuItem('Root')
@@ -107,6 +108,7 @@ class MainWindow:
         cmds.menuItem('Square')
         cmds.menuItem('Triangle_back')
         cmds.menuItem('Triangle_front')
+        self.textfield_control_name = cmds.textField('control', w=self.b3_width)
         #cmds.text(label = self.sep_str, parent = self.curve_layout)
 
         # DISPLAY
@@ -226,7 +228,8 @@ class MainWindow:
 
     def create_control(self, button: str) -> None:
         shape: str = cmds.optionMenu(self.optionmenu_control, query = True, value = True).lower()
-        curve.control(shape = shape)
+        name: str = cmds.textField(self.textfield_control_name, query=True, text=True)
+        curve.control(shape = shape, name = name)
 
 
     def color_node(self, button: str, color: str) -> None:

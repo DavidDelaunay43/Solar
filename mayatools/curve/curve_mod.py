@@ -204,6 +204,8 @@ def control(shape: str = "sphere", name: str = "control", color: str = "yellow")
         degree = 3
 
     cmds.curve(name=name, degree=degree, point=vertex_coords)
+    shape = cmds.listRelatives(name, s=1)[0]
+    cmds.rename(shape, f'{name}Shape')
     display.color_node(name, color)
     cmds.select(clear=True)
     return name
