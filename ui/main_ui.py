@@ -156,13 +156,15 @@ class MainWindow:
         self.rig_layout = cmds.frameLayout(label='Rig', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Ribbon Spine
         cmds.text(label = 'Spine', align='left', font = 'boldLabelFont', parent = self.rig_layout)
-        cmds.text(label='Select pelvis locator then chest locator.', align='left')
         self.radiobuttons_spine = cmds.radioCollection()
         cmds.rowColumnLayout (numberOfColumns = 3, parent = self.rig_layout)
         cmds.radioButton('Ik Spline', select=True)
         cmds.radioButton('Ribbon')
         cmds.radioButton('Matrix Ribbon')
-        cmds.button(label='Create Spine', bgc=self.blue, parent = self.rig_layout, command=self.create_spine)
+        cmds.text(label='Select pelvis locator then chest locator.', align='left', parent=self.rig_layout)
+        cmds.rowColumnLayout (numberOfColumns = 2, parent = self.rig_layout)
+        cmds.button(label='Create Locators', w=self.b_width, command=self.create_spine_locators)
+        cmds.button(label='Create Spine', bgc=self.blue, w=self.b_width, command=self.create_spine)
         
         # RIVET
         self.rivet_layout = cmds.frameLayout(label='Rivet', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
@@ -248,10 +250,13 @@ class MainWindow:
 
         else:
             ribbon.bone_ribbon(*cmds.ls(selection=True), sub=sub)
+            
+            
+    def create_spine_locators(self, button: str) -> None:
+        rig.create_spine_locators()
         
         
     def create_spine(self, button: str) -> None:
-        
         spine_type = cmds.radioCollection(self.radiobuttons_spine, query=True, select=True).replace('_', ' ')
         spine_dict = {
             'Ik Spline': None,

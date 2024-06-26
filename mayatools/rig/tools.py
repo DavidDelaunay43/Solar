@@ -1,4 +1,20 @@
 from ...utils.imports import *
+from .. import attribute
+
+
+def create_spine_locators() -> None:
+    
+    cmds.select(clear=True)
+    pelvis_loc = 'pelvis_loc'
+    chest_loc = 'chest_loc'
+    cmds.spaceLocator(name=pelvis_loc)
+    cmds.spaceLocator(name=chest_loc)
+    attribute.cb_attributes(pelvis_loc, ['tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz'], lock=True)
+    attribute.cb_attributes(chest_loc, ['tx', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz'], lock=True)
+    cmds.parent(chest_loc, pelvis_loc)
+    cmds.setAttr(f'{pelvis_loc}.ty', 10)
+    cmds.setAttr(f'{chest_loc}.ty', 10)
+    cmds.select(pelvis_loc)
 
 
 def blendshape_setup(weigth_name: str):

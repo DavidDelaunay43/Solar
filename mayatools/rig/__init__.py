@@ -25,6 +25,7 @@ from .blendshape import (
     TransferDialog
 )
 from .tools import (
+    create_spine_locators,
     rivet_geo,
     create_blendshapes
 )
