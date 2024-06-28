@@ -1,6 +1,14 @@
 import maya.cmds as cmds
+import maya.api.OpenMaya as om
 from functools import partial
 from ..mayatools import attribute, curve, display, offset, ribbon, rig, rivet, spine
+from typing import Callable
+
+def info(func: Callable):
+    def wrapper(*args, **kwargs) -> Callable:
+        om.MGlobal.displayInfo(f"--- {func.__name__.capitalize().replace('_', ' ')} Function ---")
+        return func(*args, **kwargs)
+    return wrapper
 
 
 class MainWindow:
@@ -9,7 +17,7 @@ class MainWindow:
     window = 'MainWindow'
     dock_ui = 'MainWindowDock'
     title = 'Maya tools'
-    width = 300
+    width = 280
     height = 150
     b_width = width * 0.525
     b3_width = width * 0.37
@@ -61,18 +69,9 @@ class MainWindow:
         self.cbs_rotate = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['RotateX', 'RotateY', 'RotateZ'])  
         self.cbs_scale = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['ScaleX', 'ScaleY', 'ScaleZ'])
         cmds.separator(h=5, bgc=self.sep_bgc, style = 'in')
-        #self.cb_grp_ats01 = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['Lock', 'NonKeyable', 'Hide'])
-        #self.cb_grp_ats02 = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['Unlock', 'Keyable', 'Show'])
-        cmds.rowColumnLayout(numberOfColumns = 3, rowSpacing = [3,3], columnSpacing = [3,3])
-        cmds.radioCollection()
-        cmds.radioButton('Lock')
-        cmds.radioButton('Unlock')
-        cmds.radioCollection()
-        cmds.radioButton('Nonkeyable')
-        cmds.radioButton('Keyable')
-        cmds.radioCollection()
-        cmds.radioButton('Hide')
-        cmds.radioButton('Show')
+        self.radiobutton_lock = cmds.radioButtonGrp(labelArray3=['Lock', 'Unlock', 'None'], numberOfRadioButtons=3, select=0)
+        self.radiobutton_key = cmds.radioButtonGrp(labelArray3=['Nonkeyable', 'Keyable', 'None'], numberOfRadioButtons=3, select=0)
+        self.radiobutton_vis = cmds.radioButtonGrp(labelArray3=['Hide', 'Show', 'None'], numberOfRadioButtons=3, select=0)
         cmds.button(label = 'Transform Attributes', parent=self.attribute_layout, bgc=self.blue, command=self.transform_attributes)
         cmds.text(label = self.sep_str, parent = self.attribute_layout)
         # Proxy attributes
@@ -179,9 +178,12 @@ class MainWindow:
         cmds.dockControl (self.dock_ui, e = 1, r = 1, w = self.size[0]+20)
 
 
+    @info
     def sep_cb(self, button: str, v: bool) -> None:
         attribute.sep_cb(cmds.ls(selection=True), value = v)
 
+
+    @info
     def transform_attributes(self, button: str) -> None:
         tx, ty, tz = cmds.checkBoxGrp(self.cbs_translate, query=True, valueArray3=True)
         rx, ry, rz = cmds.checkBoxGrp(self.cbs_rotate, query=True, valueArray3=True)
@@ -201,49 +203,59 @@ class MainWindow:
         for key, value in ats_dict.items():
             if value:
                 attributes.append(key)
+        om.MGlobal.displayInfo(f'Transform attributes : {attributes}')
 
-        lock: bool = cmds.checkBoxGrp(self.cb_grp_ats01, query=True, v1=True)
-        nonkeyable: bool = cmds.checkBoxGrp(self.cb_grp_ats01, query=True, v2=True)
-        hide: bool = cmds.checkBoxGrp(self.cb_grp_ats01, query=True, v3=True)
-        unlock: bool = cmds.checkBoxGrp(self.cb_grp_ats02, query=True, v1=True)
-        keyable: bool = cmds.checkBoxGrp(self.cb_grp_ats02, query=True, v2=True)
-        show: bool = cmds.checkBoxGrp(self.cb_grp_ats02, query=True, v3=True)
-        
-        attribute.cb_attributes(cmds.ls(selection=True), attributes, lock, unlock, hide, show, nonkeyable, keyable)
+        lock: bool = cmds.radioButtonGrp(self.radiobutton_lock, query=True, select=True) == 1
+        unlock: bool = cmds.radioButtonGrp(self.radiobutton_lock, query=True, select=True) == 2
+        nonkeyable: bool = cmds.radioButtonGrp(self.radiobutton_key, query=True, select=True) == 1
+        keyable: bool = cmds.radioButtonGrp(self.radiobutton_key, query=True, select=True) == 2
+        hide: bool = cmds.radioButtonGrp(self.radiobutton_vis, query=True, select=True) == 1
+        show: bool = cmds.radioButtonGrp(self.radiobutton_vis, query=True, select=True) == 2
+        om.MGlobal.displayInfo(f'Lock: {lock}\nUnlock: {unlock}\nNonkeyable: {nonkeyable}\nKeyable: {keyable}\nHide: {hide}\nShow: {show}')
+        print(cmds.radioButtonGrp(self.radiobutton_lock, query=True, select=True) )
+        attribute.cb_attributes(cmds.ls(selection=True), attributes, lock=lock, unlock=unlock, hide=hide, show=show, nonkeyable=nonkeyable, keyable=keyable)
 
     
+    @info
     def proxy_attribute(self, button: str) -> None:
         proxy_node: str = cmds.textField(self.textfield_proxy_node, query=True, text=True)
         at: str = cmds.textField(self.textfield_attribute, query=True, text=True)
         attribute.proxy_attribute(cmds.ls(selection=True), proxy_node, at)
 
 
+    @info
     def add_shape(self, button: str) -> None:
         curve.add_shape(cmds.ls(selection=True))
 
 
+    @info
     def remove_shape(self, button: str) -> None:
         curve.remove_shape(cmds.ls(selection=True))
 
 
+    @info
     def create_control(self, button: str) -> None:
         shape: str = cmds.optionMenu(self.optionmenu_control, query = True, value = True).lower()
         name: str = cmds.textField(self.textfield_control_name, query=True, text=True)
         curve.control(shape = shape, name = name)
 
 
+    @info
     def color_node(self, button: str, color: str) -> None:
         display.color_node(cmds.ls(selection=True), color)
 
 
+    @info
     def bake_transforms_to_offset_parent_matrix(self, button: str) -> None:
         offset.offset_parent_matrix(cmds.ls(selection=True))
 
 
+    @info
     def offset_parent_matrix_to_transforms(self, button: str) -> None:
         offset.op_matrix_to_transforms(cmds.ls(selection=True))
 
 
+    @info
     def create_ribbon(self, button: str) -> None:
         sub = int(cmds.intSliderGrp(self.intslider_ribbon_sub, query=True, value=True))
         name = cmds.textField(self.textfield_ribbon_name, query=True, text=True)
@@ -254,11 +266,13 @@ class MainWindow:
         else:
             ribbon.bone_ribbon(*cmds.ls(selection=True), sub=sub)
             
-            
+
+    @info 
     def create_spine_locators(self, button: str) -> None:
         rig.create_spine_locators()
         
-        
+    
+    @info
     def create_spine(self, button: str) -> None:
         spine_type = cmds.radioCollection(self.radiobuttons_spine, query=True, select=True).replace('_', ' ')
         spine_dict = {
@@ -271,6 +285,7 @@ class MainWindow:
         spine_func(*cmds.ls(selection=True))
     
     
+    @info
     def create_rivet(self, button: str) -> None:
         rivet.rivet_mesh_user()
 #

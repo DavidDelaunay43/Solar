@@ -4,6 +4,13 @@ import os
 from functools import wraps
 from typing import Callable
 from .logger import Logger
+import maya.api.OpenMaya as om
+
+def info(func: Callable):
+    def wrapper(*args, **kwargs) -> Callable:
+        om.MGlobal.displayInfo(f"--- {func.__name__.capitalize().replace('_', ' ')} Function ---")
+        return func(*args, **kwargs)
+    return wrapper
 
 
 class TypeCheckLogger(Logger):

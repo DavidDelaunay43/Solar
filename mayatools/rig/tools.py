@@ -9,7 +9,7 @@ def create_spine_locators() -> None:
     chest_loc = 'chest_loc'
     cmds.spaceLocator(name=pelvis_loc)
     cmds.spaceLocator(name=chest_loc)
-    attribute.cb_attributes(pelvis_loc, ['tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz'], lock=True)
+    attribute.cb_attributes(pelvis_loc, ['tx', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz'], lock=True)
     attribute.cb_attributes(chest_loc, ['tx', 'tz', 'rx', 'ry', 'rz', 'sx', 'sy', 'sz'], lock=True)
     cmds.parent(chest_loc, pelvis_loc)
     cmds.setAttr(f'{pelvis_loc}.ty', 10)

@@ -147,7 +147,7 @@ def cb_attributes(
                 cmds.setAttr(f"{node}.{at}", channelBox=True, keyable=False)
 
             if keyable:
-                cmds.setAttr(f"{node}.{at}", channelBox=True, keyable=True)
+                cmds.setAttr(f"{node}.{at}", keyable=True)
 
 
 vis_no_keyable = partial(cb_attributes, ats=["v"], nonkeyable=True)
