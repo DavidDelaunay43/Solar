@@ -23,7 +23,7 @@ class MainWindow:
     b3_width = width * 0.37
     b4_width = width * 0.27
     size = (width, height)
-    layout_bgc = (0.2,0.2,0.2)
+    layout_bgc = (0.15, 0.15, 0.15)
     sep_bgc = (0.9, 0.9, 0.9)
     red = (0.9, 0.5, 0.5)
     green = (0.5, 0.9, 0.5)
@@ -57,13 +57,13 @@ class MainWindow:
         # ATTRIBUTE
         self.attribute_layout = cmds.frameLayout(label='Attribute', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Separator
-        cmds.text(label = 'Channel Box Separator', align = 'left', font = 'boldLabelFont')
+        cmds.text(label = '• Channel Box Separator', align = 'left', font = 'boldLabelFont')
         cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3])
         cmds.button(label = 'Add', width = self.b_width, bgc=self.green, command = partial(self.sep_cb, v=1))
         cmds.button(label = 'Remove', width = self.b_width, bgc=self.red, command = partial(self.sep_cb, v=0))
         cmds.text(label = self.sep_str, parent = self.attribute_layout)
         # Transform attributes
-        cmds.text(label='Transform Attributes', align='left', font = 'boldLabelFont', parent=self.attribute_layout)
+        cmds.text(label='• Transform Attributes', align='left', font = 'boldLabelFont', parent=self.attribute_layout)
         self.transform_atributes_layout = cmds.columnLayout(parent=self.attribute_layout)
         self.cbs_translate = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['TranslateX', 'TranslateY', 'TranslateZ']) 
         self.cbs_rotate = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['RotateX', 'RotateY', 'RotateZ'])  
@@ -75,7 +75,7 @@ class MainWindow:
         cmds.button(label = 'Transform Attributes', parent=self.attribute_layout, bgc=self.blue, command=self.transform_attributes)
         cmds.text(label = self.sep_str, parent = self.attribute_layout)
         # Proxy attributes
-        cmds.text(label = 'Proxy Attribute', align = 'left', font = 'boldLabelFont', parent = self.attribute_layout)
+        cmds.text(label = '• Proxy Attribute', align = 'left', font = 'boldLabelFont', parent = self.attribute_layout)
         self.proxy_attribute_layout = cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.attribute_layout)
         cmds.text(label = 'Proxy Node :', align='left')
         cmds.text(label = 'Attribute :', align='left')
@@ -90,13 +90,13 @@ class MainWindow:
         # CURVE
         self.curve_layout = cmds.frameLayout(label='Curve', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Shapes
-        cmds.text(label = 'Shapes', align = 'left', font = 'boldLabelFont')
+        cmds.text(label = '• Shapes', align = 'left', font = 'boldLabelFont')
         cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3])
         cmds.button(label = 'Add', width = self.b_width, bgc=self.green, command = self.add_shape)
         cmds.button(label = 'Remove', width = self.b_width, bgc=self.red, command = self.remove_shape)
         cmds.text(label = self.sep_str, parent = self.curve_layout)
         # Controls
-        cmds.text(label = 'Controls', align = 'left', font = 'boldLabelFont', parent = self.curve_layout)
+        cmds.text(label = '• Controls', align = 'left', font = 'boldLabelFont', parent = self.curve_layout)
         cmds.rowColumnLayout (numberOfColumns = 3, parent = self.curve_layout)
         cmds.button(label = 'Create control', bgc=self.blue, w=self.b3_width, command = self.create_control)
         self.optionmenu_control = cmds.optionMenu(w=self.b3_width)
@@ -112,7 +112,7 @@ class MainWindow:
 
         # DISPLAY
         self.display_layout = cmds.frameLayout(label='Display', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
-        cmds.text(label = 'Color node', align='left', font = 'boldLabelFont', parent = self.display_layout)
+        cmds.text(label = '• Color node', align='left', font = 'boldLabelFont', parent = self.display_layout)
         cmds.rowColumnLayout (numberOfColumns = 4, parent = self.display_layout)
         cmds.button(label='BLUE', w=self.b4_width, bgc=(0.26279, 0.61957, 0.99998), command=partial(self.color_node, color='blue'))
         cmds.button(label='GOLD', w=self.b4_width, bgc=(1.0, 0.7461085915565491, 0.0), command=partial(self.color_node, color='gold'))
@@ -134,7 +134,7 @@ class MainWindow:
         # OFFSET
         self.offset_layout = cmds.frameLayout(label='Offset', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Offset parent matrix
-        cmds.text(label = 'Offset Parent Matrix', align='left', font = 'boldLabelFont', parent = self.offset_layout)
+        cmds.text(label = '• Offset Parent Matrix', align='left', font = 'boldLabelFont', parent = self.offset_layout)
         cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.offset_layout)
         cmds.button(label = 'Transforms -> OPMatrix', width = self.b_width, bgc=self.blue, command = self.bake_transforms_to_offset_parent_matrix)
         cmds.button(label = 'OPMatrix -> Transforms', width = self.b_width, bgc=self.blue, command = self.offset_parent_matrix_to_transforms)
@@ -142,7 +142,7 @@ class MainWindow:
 
         # RIBBON
         self.ribbon_layout = cmds.frameLayout(label='Ribbon', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
-        cmds.text(label = 'Ribbon', align='left', font = 'boldLabelFont', parent = self.ribbon_layout)
+        cmds.text(label = '• Ribbon', align='left', font = 'boldLabelFont', parent = self.ribbon_layout)
         self.ribbon_lyt = cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.ribbon_layout)
         cmds.text(label='Name :', align='left')
         cmds.text(label='Subdivisions :', align='left')
@@ -156,7 +156,7 @@ class MainWindow:
         # RIG
         self.rig_layout = cmds.frameLayout(label='Rig', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Ribbon Spine
-        cmds.text(label = 'Spine', align='left', font = 'boldLabelFont', parent = self.rig_layout)
+        cmds.text(label = '• Spine', align='left', font = 'boldLabelFont', parent = self.rig_layout)
         self.radiobuttons_spine = cmds.radioCollection()
         cmds.rowColumnLayout (numberOfColumns = 3, parent = self.rig_layout)
         cmds.radioButton('Ik Spline', select=True)
@@ -276,7 +276,7 @@ class MainWindow:
     def create_spine(self, button: str) -> None:
         spine_type = cmds.radioCollection(self.radiobuttons_spine, query=True, select=True).replace('_', ' ')
         spine_dict = {
-            'Ik Spline': None,
+            'Ik Spline': spine.ik_spline_spine,
             'Ribbon': rig.spine_ribbon,
             'Matrix Ribbon': spine.spine_matrix
         }

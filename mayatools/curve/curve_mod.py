@@ -309,6 +309,7 @@ def parent_shapes(nodes: list):
 
         shape = cmds.listRelatives(node, shapes=True)[0]
         cmds.parent(shape, parent_grp, relative=True, shape=True)
+        cmds.rename(shape, f'{parent_grp}Shape')
         cmds.delete(node)
 
 
