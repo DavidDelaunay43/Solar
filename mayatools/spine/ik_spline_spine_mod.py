@@ -36,19 +36,19 @@ def ik_spline_spine(start: str, end: str) -> None:
         y_pos = start_pos[1] + (length/4)*i
         pos = start_pos[0], y_pos, start_pos[2]
         jnt = f'fk_spine_{i+1:02}'
-        cmds.joint(position=pos, orientation=[-180,0,90], name=jnt)
+        cmds.joint(position=pos, orientation=[0,0,0], name=jnt)
         cmds.setAttr(f'{jnt}.drawStyle', 2) # None
         display.color_node(jnt, 'blue')
         fk_joints.append(jnt)
     cmds.select(clear=True)
     for jnt in fk_joints:
         try:
-            cmds.joint(jnt, edit=True, oj='xyz', sao='xup')
+            cmds.joint(jnt, edit=True, oj='yxz', sao='xup')
         except RuntimeError:
             cmds.joint(jnt, edit=True, oj='none')
     offset.offset_parent_matrix(fk_joints)
-    curve.add_shape(['fk_spine_02', 'fk_spine_03', 'fk_spine_04'])
-
+    curve.add_shape(['fk_spine_02', 'fk_spine_03', 'fk_spine_04'], normal=[0,1,0])
+    
     # create ik spline
     spline_curve: str = cmds.curve(degree=3, point=points, name = 'crv_spline_spine')
     start_jnt, end_jnt = bind_joints[0], bind_joints[-1]
@@ -72,6 +72,8 @@ def ik_spline_spine(start: str, end: str) -> None:
     # set twist
     cmds.setAttr(f'{ik_spline}.dTwistControlEnable', 1)
     cmds.setAttr(f'{ik_spline}.dWorldUpType', 4) # Object Rotation Up
+    cmds.setAttr(f'{ik_spline}.dForwardAxis', 2) # Positive Y
+    cmds.setAttr(f'{ik_spline}.dWorldUpAxis', 6) # Positive X
     cmds.connectAttr(f'{pelvis_jnt}.worldMatrix[0]', f'{ik_spline}.dWorldUpMatrix')
     cmds.connectAttr(f'{chest_jnt}.worldMatrix[0]', f'{ik_spline}.dWorldUpMatrixEnd')
     

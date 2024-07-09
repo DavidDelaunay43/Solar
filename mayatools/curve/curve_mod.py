@@ -11,7 +11,7 @@ reload(tools)
 from ..constants_maya import SHAPES_CTRL
 
 
-def add_shape(nodes):
+def add_shape(nodes, normal = [1,0,0]):
     """Add a custom shape to the specified Maya nodes.
 
     Parameters
@@ -26,9 +26,16 @@ def add_shape(nodes):
 
     nodes: list = tools.ensure_list(nodes)
     for node in nodes:
-        ctrl = cmds.circle(normal=[1, 0, 0], constructionHistory=False)[0]
+        ctrl = cmds.circle(normal=normal, constructionHistory=False)[0]
         parent_shapes([ctrl, node])
-
+        
+        
+def remove_shape(nodes) -> None:
+    nodes: list = tools.ensure_list(nodes)
+    for node in nodes:
+        for shape in cmds.listRelatives(node, shapes=True):
+            cmds.delete(shape)
+        
 
 def scale_shape(curves, value: float):
     """Scale the specified Maya curves by a given factor.
@@ -203,12 +210,12 @@ def control(shape: str = "sphere", name: str = "control", color: str = "yellow")
     if shape in ["star"]:
         degree = 3
 
-    cmds.curve(name=name, degree=degree, point=vertex_coords)
-    shape = cmds.listRelatives(name, s=1)[0]
-    cmds.rename(shape, f'{name}Shape')
-    display.color_node(name, color)
+    curve_name: str = cmds.curve(name=name, degree=degree, point=vertex_coords)
+    shape = cmds.listRelatives(curve_name, s=1)[0]
+    cmds.rename(shape, f'{curve_name}Shape')
+    display.color_node(curve_name, color)
     cmds.select(clear=True)
-    return name
+    return curve_name
 
 
 def poly_to_curve(

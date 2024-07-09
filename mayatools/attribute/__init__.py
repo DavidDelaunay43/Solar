@@ -1,4 +1,5 @@
 from .attribute_mod import (
+    proxy_attribute,
     disconnect_attributes,
     rman_attribs,
     dag_rman_attribs,

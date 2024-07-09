@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from functools import partial
-from ..mayatools import attribute, curve, display, offset, ribbon, rig, rivet, spine
+from ..mayatools import attribute, curve, display, offset, matrix, ribbon, rig, rivet, spine
 from typing import Callable
 
 def info(func: Callable):
@@ -130,12 +130,31 @@ class MainWindow:
 
         # MATRIX
         cmds.frameLayout(label='Matrix', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
+        cmds.text(label = '• Matrix Constraint', align='left', font = 'boldLabelFont')
+        self.mtx_offset_cb = cmds.checkBox('Maintain offset')
+        self.mtx_translate_all_cb = cmds.checkBox(label = 'Translate', value=True)
+        self.mtx_translate_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'])
+        self.mtx_rotate_all_cb = cmds.checkBox(label = 'Rotate', value=True)
+        self.mtx_rotate_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'])
+        self.mtx_scale_all_cb = cmds.checkBox(label = 'Scale', value=True)
+        self.mtx_scale_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'])
+        cmds.button(label = 'Matrix Constraint', bgc=self.blue, command=self.matrix_constraint)
+        cmds.text(label = self.sep_str)
+        cmds.text(label = '• Aim Matrix Constraint', align='left', font = 'boldLabelFont')
+        self.aimmtx_offset_cb = cmds.checkBox('Maintain offset')
+        self.aimmtx_rotate_all_cb = cmds.checkBox(label = 'Rotate', value=True)
+        self.aimmtx_rotate_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'])
+        cmds.text(label='Aim Vector', align='left')
+        self.aimmtx_av_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'], value1=True)
+        cmds.text(label='Up Vector', align='left')
+        self.aimmtx_uv_cb_grp = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'], value2=True)
+        cmds.button(label = 'Aim Matrix Constraint', bgc=self.blue, command=self.aim_matrix_constraint)
 
         # OFFSET
         self.offset_layout = cmds.frameLayout(label='Offset', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
         # Offset parent matrix
         cmds.text(label = '• Offset Parent Matrix', align='left', font = 'boldLabelFont', parent = self.offset_layout)
-        cmds.rowColumnLayout (numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.offset_layout)
+        cmds.rowColumnLayout(numberOfColumns = 2, rowSpacing = [2,3], columnSpacing = [2,3], parent = self.offset_layout)
         cmds.button(label = 'Transforms -> OPMatrix', width = self.b_width, bgc=self.blue, command = self.bake_transforms_to_offset_parent_matrix)
         cmds.button(label = 'OPMatrix -> Transforms', width = self.b_width, bgc=self.blue, command = self.offset_parent_matrix_to_transforms)
         #cmds.text(label = self.sep_str, parent = self.offset_layout)
@@ -243,6 +262,36 @@ class MainWindow:
     @info
     def color_node(self, button: str, color: str) -> None:
         display.color_node(cmds.ls(selection=True), color)
+        
+    
+    @info
+    def matrix_constraint(self, button: str) -> None:
+        mo = cmds.checkBox(self.mtx_offset_cb, query=True, value=True)
+        t = cmds.checkBox(self.mtx_translate_all_cb, query=True, value=True)
+        r = cmds.checkBox(self.mtx_rotate_all_cb, query=True, value=True)
+        s = cmds.checkBox(self.mtx_scale_all_cb, query=True, value=True)
+        tx = cmds.checkBoxGrp(self.mtx_translate_cb_grp, query=True, value1=True)
+        ty = cmds.checkBoxGrp(self.mtx_translate_cb_grp, query=True, value2=True)
+        tz = cmds.checkBoxGrp(self.mtx_translate_cb_grp, query=True, value3=True)
+        rx = cmds.checkBoxGrp(self.mtx_rotate_cb_grp, query=True, value1=True)
+        ry = cmds.checkBoxGrp(self.mtx_rotate_cb_grp, query=True, value2=True)
+        rz = cmds.checkBoxGrp(self.mtx_rotate_cb_grp, query=True, value3=True)
+        sx = cmds.checkBoxGrp(self.mtx_scale_cb_grp, query=True, value1=True)
+        sy = cmds.checkBoxGrp(self.mtx_scale_cb_grp, query=True, value2=True)
+        sz = cmds.checkBoxGrp(self.mtx_scale_cb_grp, query=True, value3=True)
+        matrix.matrix_on_selection(t, r, s, tx, ty, tz, rx, ry, rz, sx, sy, sz, mo)
+        
+        
+    @info
+    def aim_matrix_constraint(self, button: str) -> None:
+        mo = cmds.checkBox(self.aimmtx_offset_cb, query=True, value=True)
+        r = cmds.checkBox(self.aimmtx_rotate_all_cb, query=True, value=True)
+        rx = cmds.checkBoxGrp(self.aimmtx_rotate_cb_grp, query=True, value1=True)
+        ry = cmds.checkBoxGrp(self.aimmtx_rotate_cb_grp, query=True, value2=True)
+        rz = cmds.checkBoxGrp(self.aimmtx_rotate_cb_grp, query=True, value3=True)
+        uv = cmds.checkBoxGrp(self.aimmtx_uv_cb_grp, query=True, valueArray3=True)
+        av = cmds.checkBoxGrp(self.aimmtx_av_cb_grp, query=True, valueArray3=True)
+        matrix.aim_matrix_on_selection(r, rx, ry, rz, av, uv, mo)
 
 
     @info

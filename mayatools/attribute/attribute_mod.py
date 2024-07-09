@@ -3,6 +3,11 @@ from .. import tools
 from functools import partial
 
 
+def proxy_attribute(nodes: list, proxy_node: str, at: str):
+    for node in tools.ensure_list(nodes):
+        cmds.addAttr(node, longName=at, niceName = at.capitalize(), proxy = f'{proxy_node}.{at}')
+
+
 def disconnect_attributes(node: str, attributes: list):
     for at in attributes:
         attribut_complet = f"{node}.{at}"
