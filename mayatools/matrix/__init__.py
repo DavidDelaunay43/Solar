@@ -4,3 +4,7 @@ from .matrix_mod import (
     aim_matrix_on_selection,
     matrix_on_selection
 )
+
+from .matrix_utils import (
+    create_offset_matrix
+)
