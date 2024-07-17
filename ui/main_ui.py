@@ -4,6 +4,7 @@ from functools import partial
 from ..mayatools import attribute, curve, display, offset, matrix, ribbon, rig, rivet, spine
 from typing import Callable
 
+
 def info(func: Callable):
     def wrapper(*args, **kwargs) -> Callable:
         om.MGlobal.displayInfo(f"--- {func.__name__.capitalize().replace('_', ' ')} Function ---")
@@ -188,8 +189,11 @@ class MainWindow:
         
         # RIVET
         self.rivet_layout = cmds.frameLayout(label='Rivet', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
+        cmds.text(label = '• Rivet Mesh', align='left', font = 'boldLabelFont')
         cmds.button(label = 'Create Rivet', width = self.width, bgc=self.blue, command = self.create_rivet)
-        #cmds.text(label = self.sep_str, parent = self.rivet_layout)
+        cmds.text(label = self.sep_str, parent = self.rivet_layout)
+        cmds.text(label = '• Rivet Nurbs', align='left', font = 'boldLabelFont')
+        cmds.button(label = 'Create Rivet Nurbs', width = self.width, bgc=self.blue, command = self.create_rivet_nurbs)
         
         # Show
         cmds.dockControl (self.dock_ui, l = 'Maya tools', area = 'right', content = self.window, allowedArea = ['right', 'left'])
@@ -337,6 +341,11 @@ class MainWindow:
     @info
     def create_rivet(self, button: str) -> None:
         rivet.rivet_mesh_user()
+    
+    
+    @info
+    def create_rivet_nurbs(self, button: str) -> None:
+        rivet.rivet_nurbs(*cmds.ls(selection=True), auto=True)
 #
 #
 MainWindow()

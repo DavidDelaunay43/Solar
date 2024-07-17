@@ -286,12 +286,13 @@ def connect_rivet(
 
 def rivet_nurbs(
     nurbs_surface: str,
-    uv: Literal["u", "v"],
+    uv: Literal["u", "v"] = 'v',
     rivet_num: int = 0,
     jnt: bool = False,
     size: float = 1.0,
     col: str = "orange",
     delete_shape: bool = False,
+    auto = False
 ) -> str:
     """Create vectorial rivets on a NURBS surface.
 
@@ -314,9 +315,18 @@ def rivet_nurbs(
         surface = nurbs_surface
         surface_shape = cmds.listRelatives(surface, s=1)[0]
 
-    elif cmds.nodeType(nurbs_surface) == "nurbsSurface":
+    else: #cmds.nodeType(nurbs_surface) == "nurbsSurface":
         surface_shape = nurbs_surface
         surface = cmds.listRelatives(surface_shape, p=1)[0]
+        
+    
+    if auto:
+        spans_u: int = cmds.getAttr(f'{surface}.spansU')
+        spans_v: int = cmds.getAttr(f'{surface}.spansV')
+        
+        uv = 'u' if spans_v == 1 else 'v'
+        rivet_num = spans_u if spans_v == 1 else spans_v
+        
 
     rivets_grp = cmds.group(n=f"Grp_rivets_{surface}", em=1)
 
@@ -328,10 +338,8 @@ def rivet_nurbs(
         # create rivet
         rivet = f"rivet_{surface}_{i:02}"
         cmds.spaceLocator(n=rivet)
-        shape = cmds.listRelatives(rivet, shapes=True)[0]
-        cmds.setAttr(f"{shape}.v", 0)
+        attribute.cb_attributes(rivet, nonkeyable=True)
         cmds.parent(rivet, rivets_grp)
-
         display.color_node(rivet, col)
         display.loc_size(rivet, size)
 
