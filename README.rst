@@ -54,6 +54,9 @@ Contents
 1.3 Proxy Attribute
 -------------------
 
+.. image::
+    .doc/proxy_attribute.gif
+
 2. Cloth
 ========
 
@@ -104,6 +107,9 @@ Contents
 
 7.1 Offset Parent Matrix
 ------------------------
+
+.. image::
+    .doc/offset_parent_matrix.gif
 
 8. Ribbon
 =========
