@@ -7,31 +7,31 @@ Contents
 
 - `0. Installation`_
 - `1. Attribute`_
-  - `1.1 Channel Box Separator`_
-  - `1.2 Transform Attributes`_
-  - `1.3 Proxy Attribute`_
+    - `1.1 Channel Box Separator`_
+    - `1.2 Transform Attributes`_
+    - `1.3 Proxy Attribute`_
 - `2. Cloth`_
-  - `2.1 Cloth Setup`_
-  - `2.2 Preroll`_
+    - `2.1 Cloth Setup`_
+    - `2.2 Preroll`_
 - `3. Curve`_
-  - `3.1 Shapes`_ 
-  - `3.2 Control`_
+    - `3.1 Shapes`_ 
+    - `3.2 Control`_
 - `4. Display`_
-  - `4.1 Color Node`_
+    - `4.1 Color Node`_
 - `5. Joint`_
 - `6. Matrix`_
-  - `6.1 Matrix Constraint`_
-  - `6.2 Aim Matrix Constraint`_
+    - `6.1 Matrix Constraint`_
+    - `6.2 Aim Matrix Constraint`_
 - `7. Offset`_
-  - `7.1 Offset Parent Matrix`_
+    - `7.1 Offset Parent Matrix`_
 - `8. Ribbon`_
-  - `8.1 World Ribbon`_
-  - `8.2 Bone Ribbon`_
+    - `8.1 World Ribbon`_
+    - `8.2 Bone Ribbon`_
 - `9. Rig`_
-  - `9.1 Spine`_
+    - `9.1 Spine`_
 - `10. Rivet`_
-  - `10.1 Rivet Mesh`_ 
-  - `10.2 Rivet Nurbs`_
+    - `10.1 Rivet Mesh`_ 
+    - `10.2 Rivet Nurbs`_
 
 0. Installation
 ===============
@@ -47,6 +47,9 @@ Contents
 
 1.2 Transform Attributes
 ------------------------
+
+.. image::
+    .doc/transform_attributes.gif
 
 1.3 Proxy Attribute
 -------------------
@@ -66,14 +69,23 @@ Contents
 3.1 Shapes
 ----------
 
+.. image::
+    .doc/shapes.gif
+
 3.2 Control
 -----------
+
+.. image::
+    .doc/controls.gif
 
 4. Display
 ==========
 
 4.1 Color Node
 --------------
+
+.. image::
+    .doc/color_node.gif
 
 5. Joint
 ========
