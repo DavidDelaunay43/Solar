@@ -79,6 +79,8 @@ Shortcut to Channel Control.
 3.1 Shapes
 ----------
 
+Creates circle shapes under Transform or Joint nodes, with Normal along Primary Axis.
+
 .. image::
     .doc/shapes.gif
 
