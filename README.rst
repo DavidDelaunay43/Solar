@@ -5,23 +5,32 @@ Solar Documentation
 Contents
 ========
 
-- `1. Attribute <#1_attribute>`_
+- `1. Attribute`_
     - `1.1 Channel Box Separator`_
     - `1.2 Transform Attribute`_
     - `1.3 Proxy Attribute`_
-- `2. Cloth <#2_cloth>`_
-- `3. Curve <#3_curve>`_
-- `4. Display <#4_display>`_
-- `5. Joint <#5_joint>`_
-- `6. Matrix <#6_matrix>`_
-- `7. Offset <#7_offset>`_
-- `8. Ribbon <#8_ribbon>`_
-- `9. Rig <#9_rig>`_
-- `10. Rivet <#10_rivet>`_
+- `2. Cloth`_
+- `3. Curve`_
+    - `3.1 Shapes`_ 
+    - `3.2 Control`_
+- `4. Display`_
+    - `4.1 Color node`_
+- `5. Joint`_
+- `6. Matrix`_
+    - `6.1 Matrix Constraint`_
+    - `6.2 Aim Matrix Constraint`_
+- `7. Offset`_
+    - `7.1 Offset Parent Matrix`_
+- `8. Ribbon`_
+    - `8.1 Ribbon`_
+- `9. Rig`_
+    - `9.1 Spine`_
+- `10. Rivet`_
+     - `10.1 Rivet Mesh`_ 
+     - `10.2 Rivet Nurbs`_
 
 1. Attribute
 ============
-.. _1_attribute:
 
 1.1 Channel Box Separator
 -------------------------
@@ -41,54 +50,45 @@ wip
 
 2. Cloth
 ========
-.. _2_cloth:
 
 wip
 
 3. Curve
 ========
-.. _3_curve:
 
 wip
 
 4. Display
 ==========
-.. _4_display:
 
 wip
 
 5. Joint
 ========
-.. _5_joint:
 
 wip
 
 6. Matrix
 =========
-.. _6_matrix:
 
 wip
 
 7. Offset
 =========
-.. _7_offset:
 
 wip
 
 8. Ribbon
 =========
-.. _8_ribbon:
 
 wip
 
 9. Rig
 ======
-.. _9_rig:
 
 wip
 
 10. Rivet
 =========
-.. _10_rivet:
 
 wip
