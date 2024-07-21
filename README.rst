@@ -6,6 +6,9 @@ Contents
 ========
 
 - `1. Attribute <#1_attribute>`_
+    - `1.1 Channel Box Separator`_
+    - `1.2 Transform Attribute`_
+    - `1.3 Proxy Attribute`_
 - `2. Cloth <#2_cloth>`_
 - `3. Curve <#3_curve>`_
 - `4. Display <#4_display>`_
