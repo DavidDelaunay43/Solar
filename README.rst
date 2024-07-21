@@ -42,17 +42,24 @@ Contents
 1.1 Channel Box Separator
 -------------------------
 
+Creates or removes non-keable separator attribute on animation controllers.
+
 .. image::
     .doc/channel_box_separator.gif
 
 1.2 Transform Attributes
 ------------------------
 
+Shortcut to Channel Control.
+
 .. image::
     .doc/transform_attributes.gif
 
 1.3 Proxy Attribute
 -------------------
+
+| In this example, we have a simple ik-fk setup with the switch attribute on a proxy node.
+| To create a better setup for the animation, we create a proxy attribute on the controllers.
 
 .. image::
     .doc/proxy_attribute.gif
@@ -107,6 +114,8 @@ Contents
 
 7.1 Offset Parent Matrix
 ------------------------
+
+In order to keep the World Matrix of a Transform or Joint node, we can use the offsetParentMatrix attribute.
 
 .. image::
     .doc/offset_parent_matrix.gif
