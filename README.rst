@@ -1,9 +1,11 @@
-=====
-Solar
-=====
+Solar Documentation
+===================
+
+Attribute
+---------
+
+Channel Box Separator
+^^^^^^^^^^^^^^^^^^^^^
 
 .. image::
-    .doc/ui_01.png
-
-.. image::
-    .doc/ui_02.png
+    .doc/channel_box_separator.gif
