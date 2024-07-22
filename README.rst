@@ -36,6 +36,27 @@ Contents
 0. Installation
 ===============
 
+Go to **Code** and **Download ZIP**
+
+Or if you have git, you can clone the repository:
+
+.. code-block:: shell
+    git clone https://github.com/DavidDelaunay43/Solar.git
+
+Place the "Solar-main" folder into the maya script folder:
+
+.. list-table:: 
+   :header-rows: 1
+
+   * - os
+     - path
+   * - linux
+     - ~//maya/scripts
+   * - mac os x
+     - 	~/Library/Preferences/Autodesk/maya/scripts
+   * - windows
+     - 	\Users\<username>\Documents\maya\scripts
+
 In Maya, create a Python tab in the script editor the run:
 
 .. code-block:: python
@@ -43,7 +64,7 @@ In Maya, create a Python tab in the script editor the run:
     try:
         from Solar.ui import main_ui
     except ModuleNotFoundError:
-        from  Solar-main.ui import main_ui
+        from Solar-main.ui import main_ui
 
 1. Attribute
 ============
