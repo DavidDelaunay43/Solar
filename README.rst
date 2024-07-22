@@ -58,7 +58,7 @@ Place the "Solar-main" folder into the maya script folder:
    * - windows
      - /Users/<username>/Documents/maya/scripts
 
-In Maya, create a Python tab in the script editor the run:
+In Maya, create a Python tab in the script editor then run:
 
 .. code-block:: python
 
