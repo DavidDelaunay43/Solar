@@ -96,7 +96,7 @@ def ribbon(
 
     attribute.vis_no_keyable([ctrl_a, ctrl_b, ctrl_mid, ctrl_global])
 
-    shape_vis([ctrl_a, ctrl_b, ctrl_global], 0)
+    #shape_vis([ctrl_a, ctrl_b, ctrl_global], 0)
 
     cmds.setAttr(f"{ctrl_a}.tx", XMIN)
     cmds.setAttr(f"{ctrl_b}.tx", XMAX)

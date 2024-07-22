@@ -36,6 +36,15 @@ Contents
 0. Installation
 ===============
 
+In Maya, create a Python tab in the script editor the run:
+
+.. code-block:: python
+
+    try:
+        from Solar.ui import main_ui
+    except ModuleNotFoundError:
+        from  Solar-main.ui import main_ui
+
 1. Attribute
 ============
 
