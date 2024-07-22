@@ -56,7 +56,7 @@ Place the "Solar-main" folder into the maya script folder:
    * - mac os x
      - 	~/Library/Preferences/Autodesk/maya/scripts
    * - windows
-     - \Users\<username>\Documents\maya\scripts
+     - /Users/<username>/Documents/maya/scripts
 
 In Maya, create a Python tab in the script editor the run:
 
