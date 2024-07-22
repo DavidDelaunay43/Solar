@@ -30,10 +30,11 @@ Contents
     - `8.1 World Ribbon`_
     - `8.2 Bone Ribbon`_
 - `9. Rig`_
-    - `9.1 Spine`_
-        - `9.1.1 Ik Spline Spine`_
-        - `9.1.2 Ribbon Spine`_
-        - `9.1.3 Matrix Ribbon Spine`_
+    - `9.1 Cartoon Eye`
+    - `9.2 Spine`_
+        - `9.2.1 Ik Spline Spine`_
+        - `9.2.2 Ribbon Spine`_
+        - `9.2.3 Matrix Ribbon Spine`_
 - `10. Rivet`_
     - `10.1 Rivet Mesh`_ 
     - `10.2 Rivet Nurbs`_
@@ -176,16 +177,19 @@ In order to keep the World Matrix of a Transform or Joint node, we can use the o
 9. Rig
 ======
 
-9.1 Spine
+9.2 Cartoon Eye
+^^^^^^^^^^^^^^^
+
+9.2 Spine
 ---------
 
-9.1.1 Ik Spline Spine
+9.2.1 Ik Spline Spine
 ^^^^^^^^^^^^^^^^^^^^^
 
-9.1.2 Ribbon Spine
+9.2.2 Ribbon Spine
 ^^^^^^^^^^^^^^^^^^^
 
-9.1.3 Matrix Ribbon Spine
+9.2.3 Matrix Ribbon Spine
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 10. Rivet
