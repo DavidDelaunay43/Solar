@@ -6,19 +6,21 @@ Contents
 ========
 
 - `0. Installation`_
-- `1. Attribute`_
-    - `1.1 Channel Box Separator`_
-    - `1.2 Transform Attributes`_
-    - `1.3 Proxy Attribute`_
-- `2. Cloth`_
-    - `2.1 Cloth Setup`_
-    - `2.2 Preroll`_
-- `3. Curve`_
-    - `3.1 Shapes`_ 
-    - `3.2 Control`_
-- `4. Display`_
-    - `4.1 Color Node`_
-- `5. Joint`_
+- `1. Animation`_ 
+    - `1.1 Change FPS`_
+    - `1.2 Playblast`_
+- `2. Attribute`_
+    - `2.1 Channel Box Separator`_
+    - `2.2 Transform Attributes`_
+    - `2.3 Proxy Attribute`_
+- `3. Cloth`_
+    - `3.1 Cloth Setup`_
+    - `3.2 Preroll`_
+- `4. Curve`_
+    - `4.1 Shapes`_ 
+    - `4.2 Control`_
+- `5. Display`_
+    - `5.1 Color Node`_
 - `6. Matrix`_
     - `6.1 Matrix Constraint`_
     - `6.2 Aim Matrix Constraint`_
@@ -29,6 +31,9 @@ Contents
     - `8.2 Bone Ribbon`_
 - `9. Rig`_
     - `9.1 Spine`_
+        - `9.1.1 Ik Spline Spine`_
+        - `9.1.2 Ribbon Spine`_
+        - `9.1.3 Matrix Ribbon Spine`_
 - `10. Rivet`_
     - `10.1 Rivet Mesh`_ 
     - `10.2 Rivet Nurbs`_
@@ -67,10 +72,19 @@ In Maya, create a Python tab in the script editor then run:
     except ModuleNotFoundError:
         from Solar-main.ui import main_ui
 
-1. Attribute
+1. Animation
 ============
 
-1.1 Channel Box Separator
+1.1 Change FPS
+--------------
+
+1.2 Playblast
+-------------
+
+2. Attribute
+============
+
+2.1 Channel Box Separator
 -------------------------
 
 Creates or removes non-keable separator attribute on animation controllers.
@@ -78,7 +92,7 @@ Creates or removes non-keable separator attribute on animation controllers.
 .. image::
     .doc/channel_box_separator.gif
 
-1.2 Transform Attributes
+2.2 Transform Attributes
 ------------------------
 
 Shortcut to Channel Control.
@@ -86,7 +100,7 @@ Shortcut to Channel Control.
 .. image::
     .doc/transform_attributes.gif
 
-1.3 Proxy Attribute
+2.3 Proxy Attribute
 -------------------
 
 | In this example, we have a simple ik-fk setup with the switch attribute on a proxy node.
@@ -95,19 +109,19 @@ Shortcut to Channel Control.
 .. image::
     .doc/proxy_attribute.gif
 
-2. Cloth
+3. Cloth
 ========
 
-2.1 Cloth Setup
+3.1 Cloth Setup
 ---------------
 
-2.2 Preroll
+3.2 Preroll
 -----------
 
 3. Curve
 ========
 
-3.1 Shapes
+4.1 Shapes
 ----------
 
 Creates circle shapes under Transform or Joint nodes, with Normal along Primary Axis.
@@ -115,23 +129,20 @@ Creates circle shapes under Transform or Joint nodes, with Normal along Primary 
 .. image::
     .doc/shapes.gif
 
-3.2 Control
+4.2 Control
 -----------
 
 .. image::
     .doc/controls.gif
 
-4. Display
+5. Display
 ==========
 
-4.1 Color Node
+5.1 Color Node
 --------------
 
 .. image::
     .doc/color_node.gif
-
-5. Joint
-========
 
 6. Matrix
 =========
@@ -167,6 +178,15 @@ In order to keep the World Matrix of a Transform or Joint node, we can use the o
 
 9.1 Spine
 ---------
+
+9.1.1 Ik Spline Spine
+^^^^^^^^^^^^^^^^^^^^^
+
+9.1.2 Ribbon Spine
+^^^^^^^^^^^^^^^^^^^
+
+9.1.3 Matrix Ribbon Spine
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 10. Rivet
 =========

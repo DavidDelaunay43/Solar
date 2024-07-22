@@ -1015,7 +1015,7 @@ def spine_matrix(start: str, end: str):
     cmds.connectAttr(f"decMtx_point_4.outputRotateY", f"{add_node}.input2")
     cmds.connectAttr(f"{add_node}.output", f"{bind_chest_move}.ry", force=True)
 
-    cmds.setAttr(f"{ribbon_surface}.v", 0)
+    #cmds.setAttr(f"{ribbon_surface}.v", 0)
     cmds.setAttr(f"{loc_info_axis_mid_ik_pelvis}.v", 0)
     cmds.setAttr(f"{loc_info_axis_mid_spine}.v", 0)
     cmds.setAttr(f"{loc_info_pelvis}.v", 0)
