@@ -30,7 +30,7 @@ Contents
     - `8.1 World Ribbon`_
     - `8.2 Bone Ribbon`_
 - `9. Rig`_
-    - `9.1 Cartoon Eye`
+    - `9.1 Cartoon Eye`_
     - `9.2 Spine`_
         - `9.2.1 Ik Spline Spine`_
         - `9.2.2 Ribbon Spine`_
