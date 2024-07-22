@@ -41,6 +41,7 @@ Go to **Code** and **Download ZIP**
 Or if you have git, you can clone the repository:
 
 .. code-block:: shell
+    
     git clone https://github.com/DavidDelaunay43/Solar.git
 
 Place the "Solar-main" folder into the maya script folder:
