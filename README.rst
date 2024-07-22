@@ -119,7 +119,7 @@ Shortcut to Channel Control.
 3.2 Preroll
 -----------
 
-3. Curve
+4. Curve
 ========
 
 4.1 Shapes
