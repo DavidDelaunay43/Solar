@@ -177,8 +177,8 @@ In order to keep the World Matrix of a Transform or Joint node, we can use the o
 9. Rig
 ======
 
-9.2 Cartoon Eye
-^^^^^^^^^^^^^^^
+9.1 Cartoon Eye
+---------------
 
 9.2 Spine
 ---------
