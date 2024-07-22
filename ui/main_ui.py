@@ -1,7 +1,8 @@
+import webbrowser
 import maya.cmds as cmds
 import maya.api.OpenMaya as om
 from functools import partial
-from ..mayatools import attribute, curve, display, offset, matrix, ribbon, rig, rivet, spine
+from ..mayatools import attribute, curve, display, offset, matrix, ribbon, rig, rivet, spine, skin
 from typing import Callable
 
 
@@ -46,7 +47,7 @@ class MainWindow:
 
         # Menu
         cmds.menu(label = 'Help', tearOff = True)
-        cmds.menuItem (label = 'Documentation')
+        cmds.menuItem (label = 'Documentation', command=self.open_doc)
         
         self.base_layout = cmds.scrollLayout()
         self.main_layout = cmds.columnLayout(adjustableColumn=True)
@@ -195,10 +196,23 @@ class MainWindow:
         cmds.text(label = '• Rivet Nurbs', align='left', font = 'boldLabelFont')
         cmds.button(label = 'Create Rivet Nurbs', width = self.width, bgc=self.blue, command = self.create_rivet_nurbs)
         
+        # SKIN
+        self.skin_layout = cmds.frameLayout(label='Skin', collapsable=True, width=self.size[0], bgc=self.layout_bgc, parent=self.main_layout)
+        cmds.text(label = '• Proxy Geo', align='left', font = 'boldLabelFont')
+        self.skin_sub_axis = cmds.intSliderGrp(field=True, label='Subdivisions Axis', value=8, minValue=4, maxValue=24)
+        self.skin_sub_height = cmds.intSliderGrp(field=True, label='Subdivisions Height', value=2, minValue=1, maxValue=12)
+        self.skin_axis = cmds.checkBoxGrp(numberOfCheckBoxes=3, labelArray3=['X', 'Y', 'Z'], valueArray3=[1,0,0])
+        cmds.button(label = 'Create proxy geo', bgc=self.blue, w=self.b_width, command=self.create_proxy_geo)
+        
         # Show
         cmds.dockControl (self.dock_ui, l = 'Maya tools', area = 'right', content = self.window, allowedArea = ['right', 'left'])
         cmds.refresh()
         cmds.dockControl (self.dock_ui, e = 1, r = 1, w = self.size[0]+20)
+
+
+    def open_doc(self, button: str):
+        url: str = "https://github.com/DavidDelaunay43/Solar?tab=readme-ov-file#readme"
+        webbrowser.open(url)
 
 
     @info
@@ -346,6 +360,14 @@ class MainWindow:
     @info
     def create_rivet_nurbs(self, button: str) -> None:
         rivet.rivet_nurbs(*cmds.ls(selection=True), auto=True)
+
+
+    @info
+    def create_proxy_geo(self, button: str) -> None:
+        subdiv_axis = cmds.intSliderGrp(self.skin_sub_axis, query=True, value=True)
+        subdiv_height = cmds.intSliderGrp(self.skin_sub_height, query=True, value=True)
+        axis = cmds.checkBoxGrp(self.skin_axis, query=True, valueArray3=True)
+        skin.create_proxy_geo(cmds.ls(selection=True), subdiv_axis=subdiv_axis, subdiv_height=subdiv_height, axis=axis)
 #
 #
 MainWindow()

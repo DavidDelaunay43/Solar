@@ -9,3 +9,6 @@ from .skin_mod import (
     get_mesh_children,
     replace_geos
 )
+from .proxy_geo import (
+    create_proxy_geo
+)

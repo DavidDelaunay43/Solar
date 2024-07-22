@@ -34,6 +34,7 @@ def ribbon(
     sinus: bool = False,
     color: str = "yellow",
     base_translate: float = 0.0,
+    width: float = 1.0
 ):
     """Create a ribbon with controls and deformers.
 
@@ -59,7 +60,7 @@ def ribbon(
         axis=[0, 1, 0],
         lengthRatio=sub,
         patchesV=sub,
-        width=2,
+        width=width,
         constructionHistory=False,
     )[0]
     surface_shape = cmds.listRelatives(surface, shapes=True)[0]
@@ -88,7 +89,7 @@ def ribbon(
     ctrl_mid = f"{CTRL}_Mid_{name}"
     ctrl_mid_move = f"{CTRL}_Mid_{name}_{MOVE}"
 
-    curve.control("squashed octagon", name=ctrl_global, color=color)
+    curve.control("squashed octagon", name=ctrl_global, color='blue')
     curve.control("square", name=ctrl_a, color=color)
     curve.control("square", name=ctrl_b, color=color)
     curve.control("sphere", name=ctrl_mid, color=color)
@@ -131,22 +132,21 @@ def ribbon(
     rivets = cmds.listRelatives(grp_rivets, children=True, shapes=False)
     print(f"RIVETS {rivets}")
     for riv in rivets:
-        # cmds.connectAttr(f"{ctrl_global}.{SCALE}", f"{rivet}.{SCALE}")
         matrix.matrix_constraint(ctrl_global, riv, mo=False, s=True)
 
     # Deformers
     # blendshape
-    copy = cmds.duplicate(surface)
-    bshp = cmds.rename(copy, f"{BSHP}_{name}")
-    cmds.parent(bshp, hide_grp)
+    copy: str = cmds.duplicate(surface)
+    ribbon_relay: str = cmds.rename(copy, f"Relay_{name}")
+    cmds.parent(ribbon_relay, hide_grp)
 
-    bshp_node = cmds.blendShape(bshp, surface, n=f"{BSHP}_{name}")[0]
-    cmds.setAttr(f"{bshp_node}.{bshp}", 1)
+    bshp_node = cmds.blendShape(ribbon_relay, surface, n=f"{BSHP}_{name}")[0]
+    cmds.setAttr(f"{bshp_node}.{ribbon_relay}", 1)
 
     # curve & wire deformer
     curve_pos = [(XMIN, 0, 0), (XCENTER, 0, 0), (XMAX, 0, 0)]
     curve_master = cmds.curve(n=f"crv_{name}", d=2, p=curve_pos)
-    cmds.wire(bshp, w=curve_master, dds=(0, 20))
+    wire_deformer: str = cmds.wire(ribbon_relay, w=curve_master, dds=(0, 20))[0]
     curve_basewire = f"{curve_master}BaseWire"
     cmds.parent(curve_master, hide_grp)
     cmds.parent(curve_basewire, hide_grp)
@@ -195,7 +195,7 @@ def ribbon(
 
     # twist deformer
     twist_deformer, twist_def_handle = cmds.nonLinear(
-        bshp, type="twist", name=f"twist_{name}"
+        ribbon_relay, type="twist", name=f"twist_{name}"
     )
     cmds.rotate(0, 0, "90deg", twist_def_handle)
     cmds.parent(twist_def_handle, hide_grp)
@@ -206,6 +206,16 @@ def ribbon(
     # sine deformer
     if sinus:
         pass
+    
+    cmds.reorderDeformers(wire_deformer, twist_deformer, ribbon_relay)
+    
+    # thickness
+    attribute.sep_cb(ctrl_global)
+    cmds.addAttr(ctrl_global, longName='thickness', niceName='Thickness', dv=1, min=0, max=5, k=1)
+    for riv in rivets:
+        bind = f'bind_{riv}'
+        cmds.connectAttr(f'{ctrl_global}.thickness', f'{bind}.sx')
+        cmds.connectAttr(f'{ctrl_global}.thickness', f'{bind}.sz')
 
     tools.ensure_group(ctrl_global, CTRLS)
 
@@ -237,17 +247,20 @@ def bone_ribbon(
     fac_dict = {"L": 0.5, "R": -0.5}
     rot_dict = {"L": 0, "R": 180}
     om.MGlobal.displayInfo(f"SIDE : {SIDE}")
+    
+    bone_length: float = mathfuncs.distance_btw(start, end)
+    ribbon_width: float = bone_length / sub
 
     # naming
     limb_name = start.split("_", 1)[1] if "_" in start else start
     ribbon_name = f"ribbon_{limb_name}"
 
     ctrl_global, ctrl_a, ctrl_b, surface, grp_rivets = ribbon(
-        sub=sub, name=ribbon_name, color=color, base_translate=base_translate
+        sub=sub, name=ribbon_name, color=color, base_translate=base_translate, width=ribbon_width
     )
 
     # set ribbon scale
-    dist_jnts = mathfuncs.distance_btw(start, end)
+    """dist_jnts = mathfuncs.distance_btw(start, end)
     size_ribbon = sub * 2
 
     scale_factor = dist_jnts / size_ribbon
@@ -255,14 +268,16 @@ def bone_ribbon(
     ats = "sx", "sy", "sz"
     for at in ats:
         cmds.setAttr(f"{ctrl_global}.{at}", scale_factor)
-        cmds.setAttr(f"{ctrl_global}.{at}", lock=1)
+        cmds.setAttr(f"{ctrl_global}.{at}", lock=1)"""
 
+    scale_factor: float = bone_length / (sub*2)
     fac = fac_dict[SIDE]
 
     # set ribbon position and orientation
     cmds.matchTransform(ctrl_global, start)
-    cmds.move(dist_jnts * fac, ctrl_global, x=1, objectSpace=1, r=1, wd=1)
-
+    cmds.move(bone_length * fac, ctrl_global, x=1, objectSpace=1, r=1, wd=1)
+    cmds.rotate(-90, 0, 0, ctrl_global, relative=True, objectSpace=True, forceOrderXYZ=True)
+    
     if SIDE == "R":
         rotx = cmds.getAttr(f"{ctrl_global}.rx") - 180
         cmds.rotate(rotx, ctrl_global, x=True, objectSpace=True)
@@ -270,7 +285,9 @@ def bone_ribbon(
         mel.eval("rotate -r -os -fo 0 -180 0 ; select -cl  ;")
 
     # constrain ribbon
-    matrix.matrix_constraint(start, ctrl_global, mo=True, t=True, r=True)
+    # matrix.matrix_constraint(start, ctrl_global, mo=True, t=True, r=True, s=True)
+    cmds.parent(ctrl_global, start)
+    offset.offset_parent_matrix([ctrl_global])
 
     return ctrl_a, ctrl_b, scale_factor, surface, grp_rivets
 
