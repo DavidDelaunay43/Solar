@@ -1,0 +1,10 @@
+// Attribute Mel Procedures
+
+
+global proc proxyAttribute(string $nodes[], string $proxyNode, string $attribute) {
+
+    for ($node in $nodes) {
+        select -replace $node;
+        addAttr -longName $attribute -niceName `capitalizeString $attribute` -proxy ($proxyNode + "." + $attribute);
+    }
+}

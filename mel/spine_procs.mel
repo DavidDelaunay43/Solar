@@ -1,0 +1,12 @@
+source "math_procs.mel";
+source "nurbs_procs.mel";
+
+
+global proc createSpine(vector $startPos, vector $endPos) {
+
+    vector $midPivotBottom = `computeMidPivot $startPos $endPos 0.25`;
+    vector $midPivot = `computeMidPivot $startPos $endPos 0.5`;
+    vector $midPivotTop = `computeMidPivot $startPos $endPos 0.75`;
+
+    lowDefRibbon $startPos $endPos "ribbon_spine";
+}

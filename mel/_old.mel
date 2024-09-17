@@ -1,0 +1,67 @@
+// Spine Matrix Procedures
+
+proc float dist(vector $startPos, vector $endPos) {
+    
+    float $xDist = $endPos.x - $startPos.x;
+    float $yDist = $endPos.y - $startPos.y;
+    float $zDist = $endPos.z - $startPos.z;
+
+    float $xDistSq = `pow $xDist 2`;
+    float $yDistSq = `pow $yDist 2`;
+    float $zDistSq = `pow $zDist 2`;
+
+    float $sum = $xDistSq + $yDistSq + $zDistSq;
+    float $dist = `sqrt $sum`;
+
+    return $dist;
+}
+
+
+proc vector computeMidPivot(vector $startPos, vector $endPos, float $heightFactor) {
+
+    float $distance = `dist $startPos $endPos`;
+    vector $midPivot = <<$startPos.x, $startPos.y + $distance*$heightFactor, $startPos.z>>;
+
+    return $midPivot;
+}
+
+
+proc string[] lowDefRibbon(vector $startPos, vector $endPos, string $name) {
+
+    float $distance = `dist $startPos $endPos`;
+    float $pivX = $startPos.x;
+    float $pivY = $startPos.y + $distance*0.5;
+    float $pivZ = $startPos.z;
+
+    string $plane[] = `nurbsPlane -axis 0 0 1 -width 1 -u 1 -v 1 -degree 3 -pivot $pivX $pivY $pivZ -lengthRatio $distance -ch false -name $name`;
+    rebuildSurface -degreeU 1 -degreeV 3 -spansU 1 -spansV 2 -ch false $plane;
+
+    return $plane;
+}
+
+
+proc string[] createControl(string $name, vector $pivot) {
+
+    $x = $pivot.x;
+    $y = $pivot.y;
+    $z = $pivot.z;
+
+    string $control[] = `circle -name $name -normal 0 1 0 -ch false`;
+    string $translateAt = $control[0] + ".translate";
+    setAttr $translateAt $x $y $z;
+
+    return $control;
+}
+
+
+proc createSpine(vector $startPos, vector $endPos) {
+
+    vector $midPivotBottom = `computeMidPivot $startPos $endPos 0.25`;
+    vector $midPivot = `computeMidPivot $startPos $endPos 0.5`;
+    vector $midPivotTop = `computeMidPivot $startPos $endPos 0.75`;
+
+    lowDefRibbon $startPos $endPos "ribbon_spine";
+}
+
+
+createSpine <<0.0, 3.0, 0.0>> <<0.0, 13.0, 0.0>>;

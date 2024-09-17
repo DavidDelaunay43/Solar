@@ -1,0 +1,67 @@
+source "matrix_procs.mel";
+
+
+proc int _outlinerOrder(string $node) { 
+
+    string $parentGrp[] = `listRelatives -p $node`;
+    string $kids[] = `listRelatives -c $parentGrp[0]`;
+    int $num = stringArrayFind $node 0 $kids;
+    
+    return `size $kids`- $num;
+}
+
+
+proc string _offsetGrp(string $node, string $offsetName) { 
+
+    string $offsetGrp = group -empty -name $offsetName;
+    matchTransform $offsetGrp $node;
+
+    string $parentGrp[] = `listRelatives -p $node`;
+
+    if ($parentGrp[0] != "") {
+        int $numOrder = `_outlinerOrder $node`;
+        parent $offsetGrp $parentGrp[0];
+        reorder -relative $numOrder $offsetGrp;
+    }
+
+    parent $node $offsetGrp;
+
+    return $offsetGrp;
+
+}
+
+
+proc _bakeTransforms(string $node) {
+
+    float $localMatrixArray[] = `xform -query -m $node`;
+    matrix $localMatrix[4][4] = `arrayToMatrix $localMatrixArray`;
+    
+    string $offsetParentMatrixAt = $node + ".offsetParentMatrix";
+    float $offsetParentMatrixArray[] = `getAttr $offsetParentMatrixAt`;
+    matrix $offsetParentMatrix[4][4] = `arrayToMatrix $offsetParentMatrixArray`;
+
+    matrix $offsetMatrix[4][4] = $localMatrix*$offsetParentMatrix;
+
+    setMatrixAttr $offsetParentMatrixAt $offsetMatrix;
+
+    for ($at in {"translate", "rotate", "scale", "jointOrient"}) {
+
+        int $value = 0;
+        if ($at == "scale") {
+            $value = 1;
+        }
+
+        if (`attributeQuery -node $node -ex $at`) {
+            string $transformAt = $node + "." + $at;
+            setAttr $transformAt $value $value $value;
+        }
+    }
+}
+
+
+global proc bakeTransforms(string $nodes[]) {
+
+    for ($node in $nodes) { 
+        _bakeTransforms $node;
+    }
+}

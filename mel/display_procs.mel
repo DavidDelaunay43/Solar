@@ -1,0 +1,53 @@
+// Display Mel Procedures
+
+
+proc _colorNode(string $node, string $color) { 
+
+    string $colorArray[] = {
+        "blue",
+        "blue_elec",
+        "gold",
+        "green",
+        "magenta",
+        "orange",
+        "pink",
+        "red",
+        "yellow",
+        "white"
+    }
+    matrix colors[][] = <<
+        0.263, 0.619, 0.999, 0.0, 0.801, 1.0;
+        0.588, 0.611, 1.0, 0.0, 0.18, 1.0;
+        1.0, 0.746, 0.0, 1.0, 0.524, 0.0;
+        0.0, 1.0, 0.0, 0.0, 1.0, 0.0;
+        0.913, 0.441, 0.478, 0.954, 0.0, 0.152;
+        1.0, 0.476, 0.187, 1.0, 0.35, 0.0;
+        0.892, 0.589, 0.745, 0.948, 0.238, 0.633;
+        1.0, 0.4, 0.4, 1.0, 0.195, 0.0;
+        0.99, 0.992, 0.389, 1.0, 1.0, 0.125;
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0
+    >>
+
+    int $index = `stringArrayFind $color 0 $colorArray`;
+
+    float $outColR = colors[$index][0];
+    float $outColG = colors[$index][1];
+    float $outColB = colors[$index][2];
+    float $colR = colors[$index][3];
+    float $colG = colors[$index][4];
+    float $colB = colors[$index][5];
+
+    setAttr ($node + ".useOutlinerColor") 1;
+    setAttr ($node + ".outlinerColor") $outColR $outColG $outColB;
+    setAttr ($node + ".overrideEnabled") 1;
+    setAttr ($node + ".overrideRGBColors") 1;
+    setAttr ($node + ".overrideColorRGB") $colR $colG $colB;
+}
+
+
+global proc colorNode(string $nodes[], string $color) { 
+
+    for ($node in $nodes) {
+        _colorNode $node $color;
+    }
+}

@@ -1,0 +1,11 @@
+global proc string[] createControl(string $name, vector $pivot) {
+
+    $x = $pivot.x;
+    $y = $pivot.y;
+    $z = $pivot.z;
+
+    string $control[] = `circle -name $name -normal 0 1 0 -ch false`;
+    setAttr ($control[0] + ".translate") $x $y $z;
+
+    return $control;
+}

@@ -1,0 +1,15 @@
+source "math_procs.mel";
+
+
+global proc string[] lowDefRibbon(vector $startPos, vector $endPos, string $name) {
+
+    float $distance = `dist $startPos $endPos`;
+    float $pivX = $startPos.x;
+    float $pivY = $startPos.y + $distance*0.5;
+    float $pivZ = $startPos.z;
+
+    string $plane[] = `nurbsPlane -axis 0 0 1 -width 1 -u 1 -v 1 -degree 3 -pivot $pivX $pivY $pivZ -lengthRatio $distance -ch false -name $name`;
+    rebuildSurface -degreeU 1 -degreeV 3 -spansU 1 -spansV 2 -ch false $plane;
+
+    return $plane;
+}

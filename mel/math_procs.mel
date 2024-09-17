@@ -1,0 +1,24 @@
+global proc float dist(vector $startPos, vector $endPos) {
+    
+    float $xDist = $endPos.x - $startPos.x;
+    float $yDist = $endPos.y - $startPos.y;
+    float $zDist = $endPos.z - $startPos.z;
+
+    float $xDistSq = `pow $xDist 2`;
+    float $yDistSq = `pow $yDist 2`;
+    float $zDistSq = `pow $zDist 2`;
+
+    float $sum = $xDistSq + $yDistSq + $zDistSq;
+    float $dist = `sqrt $sum`;
+
+    return $dist;
+}
+
+
+global proc vector computeMidPivot(vector $startPos, vector $endPos, float $heightFactor) {
+
+    float $distance = `dist $startPos $endPos`;
+    vector $midPivot = <<$startPos.x, $startPos.y + $distance*$heightFactor, $startPos.z>>;
+
+    return $midPivot;
+}
