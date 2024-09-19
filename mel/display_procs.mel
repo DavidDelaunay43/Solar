@@ -15,7 +15,7 @@ proc _colorNode(string $node, string $color) {
         "yellow",
         "white"
     };
-    matrix colors[10][6] = <<
+    matrix $colors[10][6] = <<
         0.263, 0.619, 0.999, 0.0, 0.801, 1.0;
         0.588, 0.611, 1.0, 0.0, 0.18, 1.0;
         1.0, 0.746, 0.0, 1.0, 0.524, 0.0;
@@ -30,12 +30,12 @@ proc _colorNode(string $node, string $color) {
 
     int $index = `stringArrayFind $color 0 $colorArray`;
 
-    float $outColR = colors[$index][0];
-    float $outColG = colors[$index][1];
-    float $outColB = colors[$index][2];
-    float $colR = colors[$index][3];
-    float $colG = colors[$index][4];
-    float $colB = colors[$index][5];
+    float $outColR = $colors[$index][0];
+    float $outColG = $colors[$index][1];
+    float $outColB = $colors[$index][2];
+    float $colR = $colors[$index][3];
+    float $colG = $colors[$index][4];
+    float $colB = $colors[$index][5];
 
     setAttr ($node + ".useOutlinerColor") 1;
     setAttr ($node + ".outlinerColor") $outColR $outColG $outColB;
@@ -47,6 +47,7 @@ proc _colorNode(string $node, string $color) {
 
 global proc colorNode(string $nodes[], string $color) { 
 
+    string $node;
     for ($node in $nodes) {
         _colorNode $node $color;
     }

@@ -1,0 +1,28 @@
+global proc blendColors(string $fkJoint, string $ikJoint, string $name) {
+
+    if (`size $name` == 0) {
+        $name = "blendColors";
+    }
+
+    string $blendColorsNode = `shadingNode -name $name -asUtility "blendColors"`;
+    string $at;
+
+    for ($at in {"blender", "color1R", "color1G", "color1B", "color2R", "color2G", "color2B"}) {
+        setAttr ($blendColorsNode+"."+$at) 0;
+    }
+
+    connectAttr ($fkJoint+".rotate") ($blendColorsNode+".color2");
+    connectAttr ($blendColorsNode+".output") ($ikJoint+".rotate");
+}
+
+
+global proc pairBlend(string $fkJoint, string $ikJoint, string $name) { 
+
+    if (`size $name` == 0) {
+        $name = "pairBlend";
+    }
+
+    string $pairBlendNode = `createNode -name $name "pairBlend"`;
+    connectAttr ($fkJoint+".rotate") ($pairBlendNode+".inRotate1");
+    connectAttr ($pairBlendNode+".outRotate") ($ikJoint+".rotate");
+}

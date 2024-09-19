@@ -3,8 +3,103 @@
 
 global proc proxyAttribute(string $nodes[], string $proxyNode, string $attribute) {
 
+    string $node;
     for ($node in $nodes) {
         select -replace $node;
         addAttr -longName $attribute -niceName `capitalizeString $attribute` -proxy ($proxyNode + "." + $attribute);
+    }
+    select -cl;
+}
+
+
+proc _cbAttribute(string $node, string $attribute, int $states[]) {
+
+    string $state;
+    for ($state in $states) {
+
+        string $nodeAt = $node+"."+$at;
+
+        switch ($state) {
+            case "lock":
+                setAttr $nodeAt -lock true;
+                break;
+            case "unlock":
+                setAttr $nodeAt -lock false;
+                break;
+            case "hide":
+                setAttr $nodeAt -cb false -keyable false;
+                break;
+            case "show":
+                setAttr $nodeAt -cb true;
+                break;
+            case "nonkeyable":
+                setAttr $nodeAt -cb true -keyable false;
+                break;
+            case "keyable":
+                setAttr $nodeAt -keyable true;
+                break;
+        }
+    }
+}
+
+
+proc _cbAttributes(string $node, string $ats[], int $states[]) { 
+
+    string $at;
+    for ($at in $ats) { 
+        _cbAttribute $node $at $states;
+    }
+}
+
+
+global proc cbAttributes(string $nodes[], string $ats[], int $states[]) {
+
+    string $node;
+    for ($node in $nodes) {
+        _cbAttributes $node $ats $states;
+    }    
+}
+
+
+global proc visNonKeyable(string $nodes[]) {
+
+    string $node;
+    for ($node in $nodes) {
+        _cbAttribute $node "visibility" {"nonkeyable"};
+    }
+}
+
+
+proc _sepCb(string $node, int $value) {
+
+    string $separators[] = `listAttr -cb -keyable -visible -st "sep_*" $node`;
+    int $num = `size $separators`;
+    string $separatorAttribute;
+    string $sepString = "---------------";
+
+    if ($value) {
+        $separatorAttribute = "sep_" + $num;
+        select $node;
+        addAttr -longName $separatorAttribute -niceName $sepString -attributeType "enum" -enumName $sepString;
+        setAttr ($node+"."+$separatorAttribute) -cb true;
+    }
+
+    else { 
+        if ($num > 0) {
+            $separatorAttribute = $separators[$num-1];
+            deleteAttr ($node+"."+$separatorAttribute);
+        }
+        else { 
+            warning ("No separator attribute on : "+$node);
+        }
+    }
+}
+
+
+global proc sepCb(string $nodes[], int $value) { 
+
+    string $node;
+    for ($node in $nodes) {
+        _sepCb $node $value;
     }
 }

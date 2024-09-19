@@ -38,3 +38,77 @@ global proc setMatrixAttr(string $mtxAt, matrix $matrix) {
 
     setAttr $mtxAt -type "matrix" $m00 $m01 $m02 $m03 $m10 $m11 $m12 $m13 $m20 $m21 $m22 $m23 $m30 $m31 $m32 $m33;
 }
+
+
+global proc string offsetMatrix(string $master, string $target) {
+    
+    string $multMatrixNode = "multMtx_"+$target+"_"+$master;
+    $multMatrixNode = `createNode -name $multMatrixNode "multMatrix"`;
+
+    float $targetWorldMatrix[] = `getAttr ($target+".worldMatrix[0]")`;
+    float $masterWorldInverseMatrix[] = `getAttr ($master+".worldInverseMatrix[0]")`;
+    matrix $offsetMatrix[4][4] = `arrayToMatrix $targetWorldMatrix`*`arrayToMatrix $masterWorldInverseMatrix`;
+
+    setMatrixAttr ($multMatrixNode+".matrixIn[0]") $offsetMatrix;
+    connectAttr ($master+".worldMatrix[0]") ($multMatrixNode+".matrixIn[1]");
+    connectAttr ($target+".parentInverseMatrix[0]") ($multMatrixNode+".matrixIn[2]");
+    
+    return $multMatrixNode;
+}
+
+
+global proc string[] matrixConstraint(string $masters[], string $target, int $args[], int $maintainOffset) {
+
+    int $masterCount = `size $masters`;
+    string $decoMatrixNode = "decoMtx_"+$target;
+    $decoMatrixNode = `createNode -name $decoMatrixNode "decomposeMatrix"`;
+    string $nodesToReturn[];
+
+    if ($masterCount == 1) {
+
+        string $master = $masters[0];
+        string $multMatrixNode;
+
+        if ($maintainOffset) {
+            $multMatrixNode = `offsetMatrix $master $target`;
+        }
+        else { 
+            $multMatrixNode = `createNode -name ("multMtx_"+$target+"_"+$master) "multMatrix"`;
+            connectAttr ($master+".worldMatrix[0]") ($multMatrixNode+".matrixIn[0]");
+            connectAttr ($target+".parentInverseMatrix[0]") ($multMatrixNode+".matrixIn[1]");
+        }
+        connectAttr ($multMatrixNode+".matrixSum") ($decoMatrixNode+".inputMatrix");
+        $nodesToReturn = {$decoMatrixNode};
+    }
+    else { 
+
+        string $wtAddMatrixNode = "wtAddMtx_"+$target;
+        $wtAddMatrixNode = `createNode -name $wtAddMatrixNode "wtAddMatrix"`;
+
+        float $defaultWeight = 1.0/$masterCount;
+        int $i;
+        for ($i = 0; $i < $masterCount; $i++) {
+
+            string $master = $masters[$i];
+            string $multMatrixNode = `offsetMatrix $master $target`;
+            connectAttr ($multMatrixNode+".matrixSum") ($wtAddMatrixNode+".wtMatrix["+$i+"].matrixIn");
+            setAttr ($wtAddMatrixNode+".wtMatrix["+$i+"].weightIn") $defaultWeight;
+        }
+        connectAttr ($wtAddMatrixNode+".matrixSum") ($decoMatrixNode+".inputMatrix");
+        $nodesToReturn = {$decoMatrixNode, $wtAddMatrixNode};
+    }
+
+    string $ats[] = {"tx", "ty", "tz", "rx", "ry", "rz", "sx", "sy", "sz"};
+    int $i;
+    for ($i = 0; $i < `size $args`; $i++) {
+
+        string $at = $ats[$i];
+        int $arg = $args[$i];
+
+        if ($arg) {
+            connectAttr ($decoMatrixNode+".o"+$at) ($target+"."+$at);
+        }
+    }
+    select -cl;
+    return $nodesToReturn;
+}
