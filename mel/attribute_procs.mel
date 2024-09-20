@@ -73,20 +73,20 @@ global proc visNonKeyable(string $nodes[]) {
 proc _sepCb(string $node, int $value) {
 
     string $separators[] = `listAttr -cb -keyable -visible -st "sep_*" $node`;
-    int $num = `size $separators`;
+    int $sepCount = `size $separators`;
     string $separatorAttribute;
     string $sepString = "---------------";
 
     if ($value) {
-        $separatorAttribute = "sep_" + $num;
+        $separatorAttribute = "sep_" + $sepCount;
         select $node;
         addAttr -longName $separatorAttribute -niceName $sepString -attributeType "enum" -enumName $sepString;
         setAttr ($node+"."+$separatorAttribute) -cb true;
     }
 
     else { 
-        if ($num > 0) {
-            $separatorAttribute = $separators[$num-1];
+        if ($sepCount > 0) {
+            $separatorAttribute = $separators[$sepCount-1];
             deleteAttr ($node+"."+$separatorAttribute);
         }
         else { 

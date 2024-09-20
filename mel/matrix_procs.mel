@@ -112,3 +112,66 @@ global proc string[] matrixConstraint(string $masters[], string $target, int $ar
     select -cl;
     return $nodesToReturn;
 }
+
+
+global proc string matrixAimConstraint(string $masters[], string $target, int $args[], int $aimVector[], int $upVector[]) {
+
+    string $aimMatrixNode = "aimMatrix_"+$target;
+    string $multMatrixNode = "multMatrix_"+$target;
+    string $decoMatrixNode = "decoMatrix_"+$target;
+    $aimMatrixNode = `createNode -name $aimMatrixNode "aimMatrix"`;
+    $multMatrixNode = `createNode -name $multMatrixNode "multMatrix"`;
+    $decoMatrixNode = `createNode -name $decoMatrixNode "decomposeMatrix"`;
+
+    string $aimNode;
+    string $upNode;
+
+    if (`size $masters` == 1) {
+        $aimNode = $masters[0];
+        $upNode = $masters[0];
+    }
+
+    else {
+        $aimNode = $masters[0];
+        $upNode = $masters[1];
+    }
+
+    string $targetAimGrp = `group -empty -world -name ($target+"_aim")`;
+    matchTransform $targetAimGrp $aimNode;
+    matchTransform -position $targetAimGrp $target;
+
+    string $targetParent[] = `listRelatives -p $target`;
+
+    if (`size $targetParent` > 0) {
+        parent $targetAimGrp $targetParent;
+    }
+    parent $target $targetAimGrp;
+
+    connectAttr ($targetAimGrp+".parentMatrix[0]") ($aimMatrixNode+".inputMatrix");
+    connectAttr ($aimNode+".worldMatrix[0]") ($aimMatrixNode+".primary.primaryTargetMatrix");
+    connectAttr ($upNode+".worldMatrix[0]") ($aimMatrixNode+".secondary.secondaryTargetMatrix");
+    setAttr ($aimMatrixNode+".primaryMode") 1;
+    setAttr ($aimMatrixNode+".secondaryMode") 1;
+    setAttr ($aimMatrixNode+".primary.primaryInputAxis") $aimVector[0] $aimVector[1] $aimVector[2];
+    setAttr ($aimMatrixNode+".secondary.secondaryInputAxis") $upVector[0] $upVector[1] $upVector[2];
+
+    connectAttr ($aimMatrixNode+".outputMatrix") ($multMatrixNode+".matrixIn[0]");
+    connectAttr ($targetAimGrp+".parentInverseMatrix") ($multMatrixNode+".matrixIn[1]");
+
+    connectAttr ($multMatrixNode+".matrixSum") ($decoMatrixNode+".inputMatrix");
+
+    string $ats[] = {"rx", "ry", "rz"};
+    int $i;
+
+    for ($i = 0; $i < `size $ats`; $i++) {
+
+        string $at = $ats[$i];
+        int $arg = $args[$i];
+
+        if ($arg) {
+            connectAttr ($decoMatrixNode+".o"+$at) ($targetAimGrp+"."+$at);
+        }
+    }
+    select -cl;
+    return $decoMatrixNode;
+}

@@ -1,0 +1,32 @@
+// Animation Mel Procedures
+
+
+global proc string getAudioNode() {
+
+    string $audioNodes[] = `ls -type "audio"`;
+    if (`size $audioNodes` > 0) {
+        return $audioNodes[0];
+    }
+}
+
+
+global proc string[] listExistingFiles(string $directory, string $baseName) { 
+    
+    string $mayaAsciiFiles[] = `getFileList -filespec "*.ma" -folder $directory`;
+    string $mayaBinaryFiles[] = `getFileList -filespec "*.mb" -folder $directory`;
+    string $mayaFiles[] = `stringArrayCatenate $mayaAsciiFiles $mayaBinaryFiles`;
+
+    string $existingFiles[];
+    int $i;
+
+    for ($i = 0; $i < `size $mayaFiles`; $i++) {
+
+        string $file = $mayaFiles[$i];
+
+        if (`match $baseName $file` == $baseName){
+            $existingFiles[$i] = $file;
+        }
+    }
+
+    return $existingFiles;
+}
