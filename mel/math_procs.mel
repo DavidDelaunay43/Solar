@@ -22,3 +22,99 @@ global proc vector computeMidPivot(vector $startPos, vector $endPos, float $heig
 
     return $midPivot;
 }
+
+
+global proc float[] equidistantNumbers(float $num01, float $num03, float $padding) {
+
+    if ($num01 > $num02) {
+        float $tmpNum = $num01;
+        $num01 = $num02;
+        $num02 = $tmpNum;
+    }
+
+    float $distance = ($num02-$num01) / $padding * 1.0;
+    float $result[];
+    int $i;
+
+    for ($i = 1; $i < $padding; $i++) {
+
+        $result[$i] = $num01 + $distance*$i;
+    }
+
+    return $result;
+}
+
+
+global proc float[] getAxisDistances(string $node) {
+
+    float $boundingBoxValues[] = `exactWorldBoundingBox $node`;
+    float $xDistance = $boundingBoxValues[3] - $boundingBoxValues[0];
+    float $yDistance = $boundingBoxValues[4] - $boundingBoxValues[1];
+    float $zDistance = $boundingBoxValues[5] - $boundingBoxValues[2];
+
+    return {$xDistance, $yDistance, $zDistance};
+}
+
+
+proc float _getExtremeValue(string $node, int $index) { 
+
+    float $boundingBoxValues[] = `exactWorldBoundingBox $node`;
+    return boundingBoxValues[$index];
+}
+
+
+global proc float getXmin(string $node) { 
+
+    return `_getExtremeValue $node 0`;
+}
+
+
+global proc float getYmin(string $node) { 
+
+    return `_getExtremeValue $node 1`;
+}
+
+
+global proc float getZmin(string $node) { 
+
+    return `_getExtremeValue $node 2`;
+}
+
+
+global proc float getXmax(string $node) { 
+
+    return `_getExtremeValue $node 3`;
+}
+
+
+global proc float getYmax(string $node) { 
+
+    return `_getExtremeValue $node 4`;
+}
+
+
+global proc float getZmax(string $node) { 
+
+    return `_getExtremeValue $node 5`;
+}
+
+
+global proc vector getVectorCoordinates(string $node) {
+
+    float $coordinates[] = `xform -query -pivots -worldSpace $node`;
+    return <<$coordinates[0], $coordinates[1], $coordinates[2]>>;
+}
+
+
+global proc float missingDistance(string $startNode, string $midNode, string $endNode) {
+
+    float $startCoords[] = `xform -query -pivots -worldSpace $startNode`;
+    float $midCoords[] = `xform -query -pivots -worldSpace $midNode`;
+    float $endCoords[] = `xform -query -pivots -worldSpace $endNode`;
+
+    float $distanceStartMid = `distance2Pts $startCoords $midCoords`;
+    float $distanceMidEnd = `distance2Pts $midCoords $endCoords`;
+    float $distanceStartEnd = `distance2Pts $startCoords $endCoords`;
+
+    return $distanceStartMid + $distanceMidEnd - $distanceStartEnd;
+}
